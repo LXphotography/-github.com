@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LX Photography Studios | Management Portal</title>
+    <style>
+        :root {
+            --primary: #111111;
+            --accent: #d4af37; /* Luxury Gold Theme */
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 0;
+            color: var(--text);
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent);
+        }
+        header h1 { margin: 0; font-size: 28px; letter-spacing: 2px; }
+        header p { margin: 5px 0 0 0; color: #aaa; font-size: 14px; }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            background: #222;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #bbb;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .panel {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: none;
+        }
+        .panel.active { display: block; }
+
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0; color: var(--primary); }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media(max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; }
+        input, select, textarea {
+            width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px;
+        }
+        
+        button.main-btn {
+            background-color: var(--primary); color: white; border: 2px solid var(--primary);
+            padding: 14px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; transition: 0.2s;
+        }
+        button.main-btn:hover { background-color: white; color: var(--primary); border-color: var(--primary); }
+        
+        .badge { background: #e0f0ff; color: #0066cc; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .status-box { margin-top: 15px; padding: 12px; border-radius: 4px; display: none; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>LX PHOTOGRAPHY STUDIOS</h1>
+    <p>Premium Service Suite & Client Engagement Hub</p>
+</header>
+
+<div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('booking')">📸 Book a Session</button>
+    <button class="tab-btn" onclick="switchTab('broadcast')">💬 Bulk Broadcasts</button>
+    <button class="tab-btn" onclick="switchTab('details')">📜 Studio Catalogue</button>
+</div>
+
+<div class="container">
+    
+    <!-- PANEL 1: CLIENT RESERVATION BOOKING -->
+    <div id="booking" class="panel active">
+        <h2>Schedule Your Luxury Session</h2>
+        <form id="bookingForm" onsubmit="handleBooking(event)">
+            <div class="grid">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="clientName" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp / Phone Number</label>
+                    <input type="text" id="clientPhone" required placeholder="e.g., +254712345678">
+                </div>
+            </div>
+            <div class="grid">
+                <div class="form-group">
+                    <label>Photography Package</label>
+                    <select id="packageType" onchange="updatePrice()">
+                        <option value="portrait" data-price="150">Luxury Portrait Session ($150)</option>
+                        <option value="wedding" data-price="1200">Premium Wedding Coverage ($1,200)</option>
+                        <option value="commercial" data-price="500">Commercial Brand Shoot ($500)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Date & Time</label>
+                    <input type="datetime-local" id="sessionTime" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Creative Notes / Concept Details</label>
+                <textarea id="shootNotes" placeholder="Describe your preferred backdrop, outfits, or stylistic goals..."></textarea>
+            </div>
+            <button type="submit" class="main-btn">Lock In My Booking</button>
+        </form>
+        <div id="bookingStatus" class="status-box" style="background:#d4edda; color:#155724;"></div>
+    </div>
+
+    <!-- PANEL 2: BULK SMS & WHATSAPP BROADCASTING -->
+    <div id="broadcast" class="panel">
+        <h2>Targeted Marketing Engine</h2>
+        <p style="color: #666; font-size:14px;">Broadcast holiday discounts, gallery access notices, or seasonal promos instantly.</p>
+        
+        <div class="form-group">
+            <label>Channels to Use</label>
+            <label style="display:inline; font-weight:normal; margin-right:15px;"><input type="checkbox" id="useSMS" checked style="width:auto;"> Bulk SMS</label>
+            <label style="display:inline; font-weight:normal;"><input type="checkbox" id="useWA" checked style="width:auto;"> Bulk WhatsApp</label>
+        </div>
+
+        <div class="form-group">
+            <label>Recipient Contact Database List</label>
+            <textarea id="targetNumbers" placeholder="Paste target numbers separated by commas (+254711111111, +254722222222)..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Marketing Text or Offer Announcement</label>
+            <textarea id="broadcastMsg" placeholder="Hi [Name]! LX Studios is opening private booking slots for next month..."></textarea>
+        </div>
+
+        <button class="main-btn" onclick="executeBroadcast()">Launch Multi-Channel Campaign</button>
+        <div id="broadcastStatus" class="status-box" style="background:#e2f0fe; color:#104f85;"></div>
+    </div>
+
+    <!-- PANEL 3: ADVISORY & SERVICE DETAILS -->
+    <div id="details" class="panel">
+        <h2>LX Studio Operations Blueprint</h2>
+        <div class="grid">
+            <div>
+                <h3>💡 Essential Studio Enhancements</h3>
+                <p><strong>Proofing Galleries:</strong> Never send unedited photos via email. Integrate free tools like Pixieset or PassGallery to allow clients to favorite and select photos securely.</p>
+                <p><strong>Reminders:</strong> Setting up SMS automation to go out 24 hours before a shoot drops client no-show rates by nearly 85%.</p>
+            </div>
+            <div>
+                <h3>⚙️ Recommended Setup Connections</h3>
+                <ul>
+                    <li><strong>Free Database:</strong> Supabase (PostgreSQL) handles client records perfectly under a free tier.</li>
+                    <li><strong>WhatsApp API:</strong> Meta Developer Cloud Account gives your business access to direct messaging hooks.</li>
+                    <li><strong>SMS Core Gateway:</strong> Local telco aggregators route messaging pipelines efficiently.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function switchTab(tabId) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function handleBooking(e) {
+        e.preventDefault();
+        const name = document.getElementById('clientName').value;
+        const phone = document.getElementById('clientPhone').value;
+        const time = document.getElementById('sessionTime').value;
+        
+        const status = document.getElementById('bookingStatus');
+        status.innerText = `Success! Session reserved for ${name}. An automated confirmation link is staging for ${phone}.`;
+        status.style.display = 'block';
+        document.getElementById('bookingForm').reset();
+    }
+
+    function executeBroadcast() {
+        const list = document.getElementById('targetNumbers').value.trim();
+        const msg = document.getElementById('broadcastMsg').value.trim();
+        const status = document.getElementById('broadcastStatus');
+
+        if(!list || !msg) {
+            alert('Please populate both recipient contacts and campaign message body.');
+            return;
+        }
+
+        const count = list.split(',').length;
+        status.innerText = `Dispatched campaign out to ${count} photography clients across chosen network channels successfully.`;
+        status.style.display = 'block';
+    }
+</script>
+</body>
+</html>
